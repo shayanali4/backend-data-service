@@ -13,11 +13,21 @@ userRouter.get('/', expressAsyncHandler(async (req, res) => {
     res.send({ users });    
 }));
 
-userRouter.get('/seed', expressAsyncHandler(async (req, res) => {
-    const createdUsers = await User.insertMany(data.users);
-    res.send({ createdUsers });
-   
+userRouter.get('/:id', expressAsyncHandler(async (req, res) => { 
+    const user = await User.findById(req.params.id);
+    console.log("user==>",user)
+    if (user) {
+        res.send(user);
+    } else {
+        res.status(404).send({ message: 'User not Found' });
+    }
 }));
+
+// userRouter.get('/seed', expressAsyncHandler(async (req, res) => {
+//     const createdUsers = await User.insertMany(data.users);
+//     res.send({ createdUsers });
+   
+// }));
 
 userRouter.post('/signin', expressAsyncHandler(async (req, res) => {
     const user = await User.findOne({ email: req.body.email });
@@ -26,9 +36,11 @@ userRouter.post('/signin', expressAsyncHandler(async (req, res) => {
         if (bcrypt.compareSync(req.body.password, user.password)) {
             res.send({
                 _id: user._id,
-                name: user.name,
+                firstName: user.firstName,
+                lastName: user.lastName,
                 email: user.email,
-                isAdmin: user.isAdmin,
+                bio: user.bio,
+                accessLevel: user.accessLevel,
                 token: generateToken(user),
             });
         return;
@@ -50,14 +62,35 @@ userRouter.post('/register', expressAsyncHandler(async (req, res) => {
     });
     const createdUser = await user.save();
     res.send({
-                _id: createdUser._id,
-                firstName: createdUser.firstName,
-                lastName: createdUser.lastName,
-                email: createdUser.email,
-                bio: createdUser.bio,
-                accessLevel: createdUser.accessLevel,
-                token: generateToken(createdUser),
-            })
+        _id: createdUser._id,
+        firstName: createdUser.firstName,
+        lastName: createdUser.lastName,
+        email: createdUser.email,
+        bio: createdUser.bio,
+        accessLevel: createdUser.accessLevel,
+        token: generateToken(createdUser),
+    });
+}));
+
+userRouter.put('/update/:id', expressAsyncHandler(async (req, res) => { 
+    User.findByIdAndUpdate({ _id: req.params.id }, req.body).then(function () {
+        User.findOne({ _id: req.params.id }).then(function (updatedUser) {
+            res.send(updatedUser);
+        }).catch(() => {
+            res.send({ message: 'User not Updated' });
+        });
+    }).catch(() => {
+        res.send({ message: 'User not Found' });
+    });
+}));
+
+userRouter.delete('/delete/:id', expressAsyncHandler(async (req, res) => { 
+    User.findByIdAndDelete({ _id: req.params.id }).then(function () {
+        res.status(200).send({
+        message: 'User Deleted'});
+    }).catch(() => {
+        res.status(400).send({ message: 'User not Found' });
+    });
 }));
 
 export default userRouter;
