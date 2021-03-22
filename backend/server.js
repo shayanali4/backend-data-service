@@ -10,7 +10,7 @@ const app = express();
 app.use(express.json({ extended: false }));
 app.use(express.urlencoded({ extended: true }));
 console.log("process", process.env.COLLECTION)
-mongoose.connect(`mongodb+srv://${process.env.USER_NAME}:${process.env.PASS}@cluster0.gwgp8.mongodb.net/${process.env.COLLECTION}?retryWrites=true&w=majority`, {
+mongoose.connect(`mongodb+srv://${process.env.USER_NAME}:${process.env.PASS}@cluster0.gwgp8.mongodb.net/${process.env.COLLECTION}?retryWrites=true&w=majority` || 'mongodb+srv://admin:admin123@cluster0.gwgp8.mongodb.net/BackendDataService?retryWrites=true&w=majority', {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useCreateIndex: true,
