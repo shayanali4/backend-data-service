@@ -1,14 +1,16 @@
-import jwt from 'jsonwebtoken';
+import jwt from 'jsonwebtoken'; // importing JSON web token to generate token
 
-export const generateToken = (user) => {
-    return jwt.sign({
+ //This is the utilities file where we define all our functions
+
+export const generateToken = (user) => { //defining and exporting the function
+    return jwt.sign({ // generating token
         _id: user._id,
         name: user.name,
         email: user.email,
         isAdmin: user.isAdmin,
     },
-        process.env.JWT_SECRET || 'somethingsercret',
+        process.env.JWT_SECRET || 'somethingsercret', // secret key for the token
     {
-        expiresIn: '30d',
+        expiresIn: '30d', // expiry time for the token
     });
 };
