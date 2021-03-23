@@ -11,7 +11,7 @@ app.use(express.json({ extended: false }));
 app.use(express.urlencoded({ extended: true })); //handling data received in the request
 
 // Defining mongoDB database location
-mongoose.connect('mongodb+srv://admin:admin123@cluster0.gwgp8.mongodb.net/BackendDataService?retryWrites=true&w=majority', {
+mongoose.connect('mongodb+srv://curtinUser:vNQCQbBGAGeAYdcY@cluster0.z24j8.mongodb.net/AssignmentOne?retryWrites=true&w=majority', {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useCreateIndex: true,
